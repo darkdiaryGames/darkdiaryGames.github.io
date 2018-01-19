@@ -152,7 +152,7 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
     music.game.play();
     music.game.loop = true;
     music.pause.loop = true;
-    document.addEventListener('keydown', () => {keyListener(keySetter, event)});
+    document.addEventListener('keydown', (event) => {keyListener(keySetter, event)});
     music.gameover.addEventListener('ended', gameoverEnded);
     loop();
   }
