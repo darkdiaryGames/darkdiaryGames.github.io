@@ -1,0 +1,57 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#game {
+    position: relative;
+    display: inline-block;
+    float: left;
+}
+
+.panel {
+}
+
+h3 {
+    box-sizing: border-box;
+    padding: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid #ffffff;
+    width: 100vh;
+    height: 100vh;
+}
+
+td {
+    border: 1px solid #000000;
+    width: 8px;
+    height: 8px;   
+    background-color: #ffffff;
+}
+
+.empty {
+    background-color: #ffffff;
+}
+
+.body {
+    background-size: contain;
+}
+
+.head {
+    background-image: url(../img/head.gif);
+    background-size: contain;
+    transform: scale(1.4);
+}
+
+.apple {
+    background-image: url(../img/poo.png);
+    background-size: contain;
+}
+
+.gameover {
+    background-color: #510110
+}
