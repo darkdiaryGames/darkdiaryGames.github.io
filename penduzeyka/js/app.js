@@ -29,5 +29,6 @@ const control_keys = {
    'img/body8.jpg',
    'img/body9.jpg',
    'img/body10.jpg',
+   'img/body11.jpg',
  ]
 window.onload = Game();
