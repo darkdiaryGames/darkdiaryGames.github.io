@@ -15,7 +15,14 @@ const control_keys = {
   score: 'score',
   highscore: 'highscore',
   game: 'game',
-  table: 'table'
+  table: 'table',
+  bonus: 'bonus',
+  invulnerability: 'invulnerability',
+  bonus_types: {
+    antigoth: 'antigoth',
+    linn: 'linn',
+    snake: 'snake'
+  }
  },
  move_keys = [...control_keys.up, ...control_keys.down, ...control_keys.right, ...control_keys.left];
  body_images = [
@@ -30,5 +37,11 @@ const control_keys = {
    'img/body9.jpg',
    'img/body10.jpg',
    'img/body11.jpg',
- ]
+ ],
+ bonus_types = {
+   antigoth: 'antigoth',
+   snake: 'snake',
+   linn: 'linn'
+ }
+
 window.onload = Game();

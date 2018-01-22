@@ -6,23 +6,28 @@ const Apple = (n, m) => {
     return { x, y }
   }
 
-  const set = snake => {
+  const set = (snake, bonus_list) => {
     toggleCell(x, y, css_classes.apple);
-    while(true) {
+    let new_x, new_y;
+    let collision;
+    do {
+      collision = false;
       new_x = Math.floor(Math.random() * n);
       new_y = Math.floor(Math.random() * m);
-      let in_snake = false;
       for(let i=0; i<snake.x.length; i++){
         if((snake.x[i]==new_x) && (snake.y[i]==new_y)){
-          in_snake = true;
+          collision = true;
         }
       }
-      if(!in_snake) {
-        x = new_x;
-        y = new_y;
-        break;
+      for(let i=0; i<bonus_list.length; i++) {
+        let bonus = bonus_list[i].get();
+          if((new_x==bonus.x) && (new_y==bonus.y)) {
+            collision = true;
+          }
       }
-    }
+    } while(collision)
+    x = new_x;
+    y = new_y;
     toggleCell(x, y, css_classes.apple);
   }
 

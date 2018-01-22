@@ -31,6 +31,7 @@ td {
     width: 8px;
     height: 8px;   
     background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .empty {
@@ -54,4 +55,31 @@ td {
 
 .gameover {
     background-color: #510110
+}
+
+.bonus {
+    border: 3px solid #055405;
+    background-size: contain;
+    border-radius: 10%;
+}
+
+.antigoth {
+    background-image: url(../img/bonus_anti.jpg);
+}
+
+.linn {
+    background-image: url(../img/bonus_linn.gif);
+}
+
+.snake {
+    background-image: url(../img/bonus_snake.jpg);
+}
+
+.invulnerability {
+    background-color: #055405;
+}
+
+.legend_item {
+    border-bottom: 1px solid #000000;
+    padding: 20px;
 }

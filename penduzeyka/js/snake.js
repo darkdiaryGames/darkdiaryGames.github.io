@@ -27,6 +27,19 @@ let Snake = function(initial_length, n, m) {
     return eat;
   }
 
+  const checkEatBonus = (bonus_list) => {
+    for(let i=0; i<bonus_list.length; i++) {
+      let bonus = bonus_list[i].get();
+      if((bonus.x==x[0]) && (bonus.y==y[0])) {
+        return {
+          type: bonus.type,
+          index: i
+        }
+      }
+    }
+    return false;
+  }
+
   const getDirection = () => {
     return direction;
   }
@@ -39,9 +52,30 @@ let Snake = function(initial_length, n, m) {
     return { x, y }
   }
 
+  const hideTail = () => {
+    for(let i=1; i<x.length; i++) {
+      toggleCell(x[i], y[i], css_classes.body);
+      x[i] = -1;
+      y[i] = -1;
+    }
+  }
+
+  const dropTail = () => {
+    hideTail();
+    x = [x[0]];
+    y = [y[0]];
+  }
+
   const move = () => {
     if(!move_keys.includes(direction)) return; 
     toggleCell(x[0], y[0], css_classes.head);
+    for(let i=1; i<x.length; i++) {
+      if((x[0]==x[i]) && (y[0]==y[i])) {
+        x[i] = -1;
+        y[i] = -1;
+        toggleCell(x[0], y[0], css_classes.body);
+      }
+    }
     toggleCell(x[0], y[0], css_classes.body);
     toggleCell(x[x.length - 1], y[y.length - 1], css_classes.body);
     for(let i=x.length - 1; i > 0; i--) {
@@ -87,9 +121,12 @@ let Snake = function(initial_length, n, m) {
     move,
     checkCollision,
     checkEatApple,
+    checkEatBonus,
     getDirection,
     setDirection,
     getBody,
+    hideTail,
+    dropTail,
     grow
   }
 }

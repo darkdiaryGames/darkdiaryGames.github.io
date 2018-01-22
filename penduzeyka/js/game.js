@@ -2,9 +2,10 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
   let state = 'game',
       score = 0,
       highscore = 0,
-      steps_till_screamer = -1,
+      bonus_list = [],
       last_frame_time = 0,
-      key = '';
+      key = '',
+      steps_in_invulnerability = 0;
       gameover_state = 0;
   const gameover_text = [
     '00000000000000000000',
@@ -63,6 +64,30 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
         key = '';
         return;
       }
+      if(steps_in_invulnerability) {
+        let body = snake.getBody();
+        toggleCell(body.x[0], body.y[0], css_classes.invulnerability);
+        steps_in_invulnerability--;
+      }
+      // let bonus_list_copy = bonus_list;
+      for(let i=bonus_list.length-1; i>=0; i--) {
+        if(!bonus_list[i].decreaseLifetime()) {
+          bonus_list[i].kill();
+          bonus_list.splice(i, 1);
+        }
+      }
+      if((Math.floor(Math.random() * 100) > 97) && (snake.getDirection())){
+        let index = Math.floor(Math.random() * 11);
+        let bonus = Bonus();
+        if(index < 6) {
+          bonus.set(n, m, snake.getBody(), apple.get(), bonus_types.antigoth, bonus_list, 30);
+        } else if(index < 9) {
+          bonus.set(n, m, snake.getBody(), apple.get(), bonus_types.linn, bonus_list, 25);
+        } else {
+          bonus.set(n, m, snake.getBody(), apple.get(), bonus_types.snake, bonus_list, 15);
+        }
+        bonus_list.push(bonus);
+      }
       if(move_keys.includes(key)) {
         if(!(
           (control_keys.up.includes(snake.getDirection()) && control_keys.down.includes(key)) ||
@@ -74,13 +99,33 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
           key = '';
         }
       }
-      if(snake.move()) {
+      if(snake.move() && !steps_in_invulnerability) {
         state = 'gameover';
         stateMusicChange();
       } else if(snake.checkEatApple(apple.get())) {
         incScore();
-        apple.set(snake.getBody());
+        apple.set(snake.getBody(), bonus_list);
+      } else{
+        let bonus = snake.checkEatBonus(bonus_list);
+        if(bonus.type==bonus_types.antigoth) {
+          bonus_list[bonus.index].kill();
+          bonus_list.splice(bonus.index, 1);
+          snake.hideTail();
+        } else if(bonus.type==bonus_types.linn) {
+          bonus_list[bonus.index].kill();
+          bonus_list.splice(bonus.index, 1);
+          steps_in_invulnerability = Math.floor(10 / speed);
+        } else if(bonus.type==bonus_types.snake) {
+          bonus_list[bonus.index].kill();
+          bonus_list.splice(bonus.index, 1);
+          snake.dropTail();
+        }
       }
+      if(steps_in_invulnerability) {
+        let body = snake.getBody();
+        toggleCell(body.x[0], body.y[0], css_classes.invulnerability);
+      }
+
     } else if(state=='gameover') {
       gameover();
     }
@@ -100,19 +145,20 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
       requestAnimationFrame(loop);
       return;
     }
-    update();
     last_frame_time = timestamp;
+    update();
     requestAnimationFrame(loop);
   }
 
   const gameoverEnded = () => {
+    state = 'game';
     if(gameover_state) {
       toggleArrayCell(gameover_text, css_classes.gameover);
     }
     snake.restart();
-    apple.set(snake.getBody());
+    apple.set(snake.getBody(), bonus_list);
     score = 0;
-    state = 'game';
+    document.getElementById(css_classes.score).innerHTML=score;
     stateMusicChange();
   }
 
@@ -148,7 +194,7 @@ var Game = (n=20, m=20, speed=0.1, initial_length=3) => {
     createBoard();
     snake = Snake(initial_length, n, m);
     apple = Apple(n, m);
-    apple.set(snake.getBody());
+    apple.set(snake.getBody(), bonus_list);
     music.game.play();
     music.game.loop = true;
     music.pause.loop = true;

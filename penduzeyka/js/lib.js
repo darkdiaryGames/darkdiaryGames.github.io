@@ -7,7 +7,6 @@ const toggleCell = function(x, y, name) {
         el.style['background-image'] = '';
       } else {
         let index = Math.floor(Math.random() * body_images.length);
-        console.log(index);
         el.style['background-image'] = `url(${body_images[index]})`;
       }
     }
